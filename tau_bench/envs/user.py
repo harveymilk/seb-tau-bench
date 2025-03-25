@@ -126,10 +126,10 @@ User Response:
     def reset(self, instruction: Optional[str] = None) -> str:
         self.messages = [
             {
-                "role": "system",
+                "role": "system", ## here system role represents the user
                 "content": self.build_system_prompt(instruction=instruction),
             },
-            {"role": "user", "content": "Hi! How can I help you today?"},
+            {"role": "user", "content": "Hi! How can I help you today?"}, ## here user role represents the agent
         ]
         return self.generate_next_message(self.messages)
 

@@ -96,16 +96,16 @@ class Env(object):
         if action.name == RESPOND_ACTION_NAME:
             observation = self.user.step(action.kwargs["content"])
             info.source = "user"
-            done = "###STOP###" in observation
+            done = "###STOP###" in observation ## seb: checks if stop is in observation meaning goal is satisfied
         elif action.name in self.tools_map:
             try:
                 observation = self.tools_map[action.name].invoke(
-                    data=self.data, **action.kwargs
+                    data=self.data, **action.kwargs ## data comes from env init and kwargs from message_to_action in tool_calling_agent.py
                 )
             except Exception as e:
                 observation = f"Error: {e}"
             info.source = action.name
-            if action.name in self.terminate_tools:
+            if action.name in self.terminate_tools: ##should you still be setting done to true in case of exception?
                 done = True
         else:
             observation = f"Unknown action {action.name}"
@@ -122,7 +122,7 @@ class Env(object):
         return consistent_hash(to_hashable(self.data))
 
     def calculate_reward(self) -> RewardResult:
-        data_hash = self.get_data_hash()
+        data_hash = self.get_data_hash() ## seb: hash of data at the end of the episode
         reward = 1.0
         actions = [
             action for action in self.task.actions if action.name != RESPOND_ACTION_NAME
@@ -130,7 +130,7 @@ class Env(object):
 
         # Check if the database changes are correct. If they are not correct, then we set the reward to 0.
         # TODO: cache gt_data_hash in tasks.py (low priority)
-        self.data = self.data_load_func()
+        self.data = self.data_load_func() ## reset data to original state
         for action in self.task.actions:
             if action.name not in self.terminate_tools:
                 self.step(action)
@@ -147,7 +147,7 @@ class Env(object):
             outputs = {}
             for output in self.task.outputs:
                 found = False
-                for action in self.actions:
+                for action in self.actions: ## doesn't this also include actions taken from self.task.actions since step called earlier in this same function?
                     if (
                         action.name == RESPOND_ACTION_NAME
                         and output.lower()

@@ -13,14 +13,14 @@ from concurrent.futures import ThreadPoolExecutor
 from tau_bench.envs import get_env
 from tau_bench.agents.base import Agent
 from tau_bench.types import EnvRunResult, RunConfig
-from litellm import provider_list
+# from litellm import provider_list
 from tau_bench.envs.user import UserStrategy
 
 
 def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.env in ["retail", "airline"], "Only retail and airline envs are supported"
-    assert config.model_provider in provider_list, "Invalid model provider"
-    assert config.user_model_provider in provider_list, "Invalid user model provider"
+    # assert config.model_provider in provider_list, "Invalid model provider"
+    # assert config.user_model_provider in provider_list, "Invalid user model provider"
     assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
@@ -36,7 +36,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         config.env,
         user_strategy=config.user_strategy,
         user_model=config.user_model,
-        user_provider=config.user_model_provider,
+        # user_provider=config.user_model_provider,
         task_split=config.task_split,
     )
     agent = agent_factory(
@@ -69,7 +69,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
                 user_strategy=config.user_strategy,
                 user_model=config.user_model,
                 task_split=config.task_split,
-                user_provider=config.user_model_provider,
+                # user_provider=config.user_model_provider,
                 task_index=idx,
             )
 
@@ -132,7 +132,7 @@ def agent_factory(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,
-            provider=config.model_provider,
+            # provider=config.model_provider,
             temperature=config.temperature,
         )
     elif config.agent_strategy == "act":
@@ -143,7 +143,7 @@ def agent_factory(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,
-            provider=config.model_provider,
+            # provider=config.model_provider,
             use_reasoning=False,
             temperature=config.temperature,
         )
@@ -155,7 +155,7 @@ def agent_factory(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,
-            provider=config.model_provider,
+            # provider=config.model_provider,
             use_reasoning=True,
             temperature=config.temperature,
         )
@@ -169,7 +169,7 @@ def agent_factory(
             tools_info=tools_info,
             wiki=wiki,
             model=config.model,
-            provider=config.model_provider,
+            # provider=config.model_provider,
             few_shot_displays=few_shot_displays,
             temperature=config.temperature,
         )

@@ -33,7 +33,7 @@ class ToolCallingAgent(Agent):
         info = env_reset_res.info.model_dump()
         reward = 0.0
         messages: List[Dict[str, Any]] = [
-            {"role": "system", "content": self.wiki},
+            {"role": "system", "content": self.wiki}, ## seb: maybe add rules here? where is data?
             {"role": "user", "content": obs},
         ]
         for _ in range(max_num_steps):
@@ -51,7 +51,7 @@ class ToolCallingAgent(Agent):
             reward = env_response.reward
             info = {**info, **env_response.info.model_dump()}
             if action.name != RESPOND_ACTION_NAME:
-                next_message["tool_calls"] = next_message["tool_calls"][:1]
+                next_message["tool_calls"] = next_message["tool_calls"][:1] ## make sure to only have one tool call
                 messages.extend(
                     [
                         next_message,
