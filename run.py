@@ -1,9 +1,10 @@
 # Copyright Sierra
-
+from dotenv import load_dotenv
+import os
 import argparse
 from tau_bench.types import RunConfig
 from tau_bench.run import run
-# from litellm import provider_list
+from litellm import provider_list
 from tau_bench.envs.user import UserStrategy
 
 
@@ -16,12 +17,13 @@ def parse_args() -> RunConfig:
     parser.add_argument(
         "--model",
         type=str,
+        default="tracy",
         help="The model to use for the agent",
     )
     parser.add_argument(
         "--model-provider",
         type=str,
-        # choices=provider_list,
+        default="trace",
         help="The model provider for the agent",
     )
     parser.add_argument(
@@ -33,7 +35,7 @@ def parse_args() -> RunConfig:
     parser.add_argument(
         "--user-model-provider",
         type=str,
-        # choices=provider_list,
+        default="openai",
         help="The model provider for the user simulator",
     )
     parser.add_argument(
@@ -45,7 +47,7 @@ def parse_args() -> RunConfig:
     parser.add_argument(
         "--temperature",
         type=float,
-        default=0.0,
+        default=0.0, ####???
         help="The sampling temperature for the action model",
     )
     parser.add_argument(
@@ -92,6 +94,8 @@ def parse_args() -> RunConfig:
         few_shot_displays_path=args.few_shot_displays_path,
     )
 
+load_dotenv() 
+print(os.getenv("MY_ENV_VAR"))
 
 def main():
     config = parse_args()
@@ -100,3 +104,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

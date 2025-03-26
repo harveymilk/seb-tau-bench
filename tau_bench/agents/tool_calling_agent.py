@@ -7,7 +7,7 @@ from typing import List, Optional, Dict, Any
 from tau_bench.agents.base import Agent
 from tau_bench.envs.base import Env
 from tau_bench.types import SolveResult, Action, RESPOND_ACTION_NAME
-
+from tracy.tau_pipeline import tau_tracy_pipeline
 
 class ToolCallingAgent(Agent):
     def __init__(
@@ -32,20 +32,27 @@ class ToolCallingAgent(Agent):
         obs = env_reset_res.observation
         info = env_reset_res.info.model_dump()
         reward = 0.0
-        messages: List[Dict[str, Any]] = [
-            {"role": "system", "content": self.wiki}, ## seb: maybe add rules here? where is data?
-            {"role": "user", "content": obs},
-        ]
+        if self.model == "tracy":
+            messages = [{"role": "user", "content": obs}]
+        else:
+            messages: List[Dict[str, Any]] = [
+                {"role": "system", "content": self.wiki},
+                {"role": "user", "content": obs},
+            ]
         for _ in range(max_num_steps):
-            res = completion(
-                messages=messages,
-                model=self.model,
-                custom_llm_provider=self.provider,
-                tools=self.tools_info,
-                temperature=self.temperature,
-            )
-            next_message = res.choices[0].message.model_dump()
-            total_cost += res._hidden_params["response_cost"]
+            
+            if self.model == "tracy":
+                next_message, total_cost = tau_tracy_pipeline(messages), 0
+            else:
+                res = completion(
+                    messages=messages,
+                    model=self.model,
+                    custom_llm_provider=self.provider,
+                    tools=self.tools_info,
+                    temperature=self.temperature,
+                )
+                next_message = res.choices[0].message.model_dump()
+                total_cost += res._hidden_params["response_cost"]
             action = message_to_action(next_message)
             env_response = env.step(action)
             reward = env_response.reward
@@ -57,7 +64,7 @@ class ToolCallingAgent(Agent):
                         next_message,
                         {
                             "role": "tool",
-                            "tool_call_id": next_message["tool_calls"][0]["id"],
+                            # "tool_call_id": next_message["tool_calls"][0]["id"],
                             "name": next_message["tool_calls"][0]["function"]["name"],
                             "content": env_response.observation,
                         },
