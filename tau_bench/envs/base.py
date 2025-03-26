@@ -147,7 +147,7 @@ class Env(object):
             outputs = {}
             for output in self.task.outputs:
                 found = False
-                for action in self.actions: ## doesn't this also include actions taken from self.task.actions since step called earlier in this same function?
+                for action in self.actions:
                     if (
                         action.name == RESPOND_ACTION_NAME
                         and output.lower()
