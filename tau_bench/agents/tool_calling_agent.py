@@ -39,10 +39,10 @@ class ToolCallingAgent(Agent):
                 {"role": "system", "content": self.wiki},
                 {"role": "user", "content": obs},
             ]
-        for _ in range(max_num_steps):
+        for step in range(max_num_steps):
             
             if self.model == "tracy":
-                next_message, total_cost = tau_tracy_pipeline(messages), 0
+                next_message, total_cost = tau_tracy_pipeline(messages, step), 0
             else:
                 res = completion(
                     messages=messages,

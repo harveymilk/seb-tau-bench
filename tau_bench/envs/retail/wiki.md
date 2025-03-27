@@ -79,3 +79,15 @@ As a retail agent, you can help users cancel or modify pending orders, return or
 - The user must provide a payment method to pay or receive refund of the price difference. If the user provides a gift card, it must have enough balance to cover the price difference.
 
 - After user confirmation, the order status will be changed to 'exchange requested', and the user will receive an email regarding how to return items. There is no need to place a new order.
+
+
+
+
+
+USEFUL_TO_ADD = """
+- Before taking consequential actions that update the database (cancel, modify, return, exchange), you have to list the action detail and obtain explicit user confirmation (yes) to proceed.
+- Our retail store has 50 types of products. For each type of product, there are variant items of different options. For example, for a 't shirt' product, there could be an item with option 'color blue size M', and another item with option 'color red size L'.
+
+- Each product has an unique product id, and each item has an unique item id. They have no relations and should not be confused.
+
+"""

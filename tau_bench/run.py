@@ -49,7 +49,8 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         len(env.tasks) if config.end_index == -1 else min(config.end_index, len(env.tasks))
     )
     ############################# change later
-    end_index = 1
+    config.start_index = 1
+    end_index = 2
     results: List[EnvRunResult] = []
     lock = multiprocessing.Lock()
     if config.task_ids and len(config.task_ids) > 0:
