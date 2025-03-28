@@ -42,7 +42,7 @@ class ToolCallingAgent(Agent):
         for step in range(max_num_steps):
             
             if self.model == "tracy":
-                next_message, total_cost = tau_tracy_pipeline(messages, step), 0
+                next_message, total_cost = tau_tracy_pipeline(messages, task_index, step), 0
             else:
                 res = completion(
                     messages=messages,
