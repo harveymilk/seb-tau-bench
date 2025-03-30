@@ -24,7 +24,7 @@ def run(config: RunConfig) -> List[EnvRunResult]:
     assert config.agent_strategy in ["tool-calling", "act", "react", "few-shot"], "Invalid agent strategy"
     assert config.task_split in ["train", "test", "dev"], "Invalid task split"
     assert config.user_strategy in [item.value for item in UserStrategy], "Invalid user strategy"
-    config.model_provider = "trace"
+    config.model_provider = "openai"
 
     random.seed(config.seed)
     time_str = datetime.now().strftime("%m%d%H%M%S")
@@ -49,8 +49,8 @@ def run(config: RunConfig) -> List[EnvRunResult]:
         len(env.tasks) if config.end_index == -1 else min(config.end_index, len(env.tasks))
     )
     ############################# change later
-    config.start_index = 1
-    end_index = 2
+    config.start_index = 0
+    end_index = 100
     results: List[EnvRunResult] = []
     lock = multiprocessing.Lock()
     if config.task_ids and len(config.task_ids) > 0:
